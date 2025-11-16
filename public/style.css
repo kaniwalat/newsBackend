@@ -1,0 +1,155 @@
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f5f6fa;
+  color: #333;
+}
+#splash-screen {
+  position: fixed;
+  inset: 0;
+  background: #f5f6fa;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeOut 1s ease-in-out forwards;
+  animation-delay: 1s;
+}
+.splash-logo {
+  width: 200px;
+  height: 200px;
+  border-radius: 16px;
+  animation: spin 1s linear infinite;
+}
+.hidden {
+  display: none;
+}
+.container {
+  width: 90%;
+  max-width: 1000px;
+  margin: auto;
+}
+.text-center {
+  text-align: center;
+}
+h1 {
+  color: #0d6efd;
+  margin-bottom: 0.3em;
+}
+.subtitle {
+  color: #6c757d;
+}
+.navbar {
+  background-color: #0d6efd;
+  color: #fff;
+  padding: 1em;
+}
+.brand {
+  text-decoration: none;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 1em 0;
+  border-bottom: 2px solid #ddd;
+  overflow-x: auto;
+}
+.tabs li {
+  margin-right: 0.5em;
+}
+.tab-btn {
+  background: none;
+  border: none;
+  padding: 0.8em 1.2em;
+  cursor: pointer;
+  color: #0d6efd;
+  font-weight: 500;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+}
+.tab-btn:hover {
+  background: rgba(13, 110, 253, 0.1);
+}
+.tab-btn.active {
+  border-bottom-color: #0d6efd;
+  color: #0d6efd;
+  font-weight: 600;
+}
+.tab-pane {
+  display: none;
+}
+.tab-pane.active {
+  display: block;
+}
+.card {
+  background: #fff;
+  border-radius: 10px;
+  margin-bottom: 1em;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-3px);
+}
+.card-img {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  display: block;
+}
+.card-body {
+  padding: 1em;
+}
+.card-title a {
+  color: #222;
+  text-decoration: none;
+}
+.card-title a:hover {
+  color: #0d6efd;
+}
+.card-text {
+  margin: 0.5em 0;
+  color: #555;
+}
+.card-date {
+  color: #888;
+  font-size: 0.9em;
+}
+footer {
+  background: #fff;
+  border-top: 1px solid #ddd;
+  text-align: center;
+  padding: 1em;
+  color: #666;
+  margin-top: 2em;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+@media (max-width: 768px) {
+  .tab-btn {
+    padding: 0.6em 0.8em;
+    font-size: 0.9em;
+  }
+  .card-img {
+    max-height: 160px;
+  }
+  h1 {
+    font-size: 1.6em;
+  }
+}
