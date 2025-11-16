@@ -159,6 +159,15 @@
   <% }) %>
 </ul>
 
+<div id="ad-container" style="margin: 20px auto; text-align: center;">
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-6176707718052075"
+             data-ad-slot="1234567890"
+             data-ad-format="auto"
+             data-adtest="on"></ins>
+      </div>
+
         <div class="tab-content">
   <% feeds.forEach((feed, index) => { %>
     <div class="tab-pane <%= index === 0 ? 'active' : '' %>" id="feed-<%= index %>">
@@ -215,19 +224,16 @@
       sidebar.classList.remove('active');
       overlay.classList.remove('active');
     });
+
+    // AdSense reklamını sayfa yüklenince push et
+    window.addEventListener('load', () => {
+      try {
+        (adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        console.error("AdSense yüklenirken hata:", e);
+      }
+    });
   </script>
-  <!-- Google AdSense Test Reklamı -->
-<div style="margin: 20px auto; text-align: center;">
-  <ins class="adsbygoogle"
-       style="display:block"
-       data-ad-client="ca-pub-6176707718052075"
-       data-ad-slot="1234567890"
-       data-ad-format="auto"
-       data-adtest="on"></ins>
-  <script>
-       (adsbygoogle = window.adsbygoogle || []).push({});
-  </script>
-</div>
 
     <script src="/js/script.js"></script>
     <script src="/js/splash.js"></script>
