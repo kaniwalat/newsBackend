@@ -21,6 +21,8 @@
     <link rel="icon" type="image/jpeg" sizes="16x16" href="/icons/16.jpg" />
     <link rel="manifest" href="/manifest.json" />
     <link rel="stylesheet" href="/style.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     <style>
       /* Overlay (arka plan karartması) */
       .overlay {
@@ -115,7 +117,14 @@
     <div id="splash-screen">
       <img src="/icons/192.jpg" alt="Logo" class="splash-logo" />
     </div>
-    <button class="open-btn" id="openBtn">Listeyi Aç</button>
+
+  <div class="logo-bar">
+    <span class="material-icons" id="openBtn">home</span>
+    <img src="/icons/128.jpg" alt="logo" width="50" height="50">
+    <span class="material-icons" id="profileBtn">person</span>
+  </div>
+
+
     <div class="overlay" id="overlay"></div>
 
     <!-- Sidebar -->
@@ -138,9 +147,7 @@
 
     <div id="app-content" class="hidden">
       <header class="navbar">
-        <div class="container">
-          <a href="#" class="brand">📰 RSS Haberler</a>
-        </div>
+
       </header>
 
       <main class="container">

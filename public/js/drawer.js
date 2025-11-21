@@ -1,5 +1,5 @@
 // drawer.js
-const openBtn = document.getElementById('openBtn');
+const openBtn = document.getElementById('material-icons');
 const closeBtn = document.getElementById('closeBtn');
 const sidebar = document.getElementById('sidebar');
 const overlay = document.getElementById('overlay');

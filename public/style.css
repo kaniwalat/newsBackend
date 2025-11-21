@@ -23,6 +23,45 @@ body {
   border-radius: 16px;
   animation: spin 1s linear infinite;
 }
+.logo-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Sol ve sağ ikonları uçlara yasla */
+  padding: 10px 20px;
+  background-color: #fff;
+  position: relative; /* Logo absolute için */
+}
+
+/* Logo ortada */
+.logo-bar .logo {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  z-index: 1;
+}
+
+/* İkonlar */
+.icon-btn {
+  font-size: 28px;
+  cursor: pointer;
+  user-select: none;
+  color: #333;
+  z-index: 2; /* Logo üstünde olmasın */
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .icon-btn {
+    font-size: 24px;
+  }
+  .logo-bar .logo {
+    width: 40px;
+    height: 40px;
+  }
+}
 .hidden {
   display: none;
 }
