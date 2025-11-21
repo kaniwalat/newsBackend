@@ -2,11 +2,10 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
-const fs = require("fs");
+const fs = require("fs")
 const feeds = require("./data");
 const Parser = require("rss-parser");
 const webpush = require("web-push");
-const cron = require("node-cron");
 
 const app = express();
 
@@ -18,14 +17,6 @@ webpush.setVapidDetails(
   publicVapidKey,
   privateVapidKey
 );
-
-const RESULTS_FILE = path.join(__dirname, "results.json");
-
-// 🛡️ Sunucu başlarken sonuç dosyasını oluştur (boş ama geçerli JSON)
-if (!fs.existsSync(RESULTS_FILE)) {
-  fs.writeFileSync(RESULTS_FILE, "[]", "utf8");
-  console.log("🆕 results.json oluşturuldu.");
-}
 
 const parser = new Parser({
   customFields: {
@@ -41,16 +32,11 @@ const parser = new Parser({
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(cors());
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "public"), {
-  maxAge: "30d",
-  etag: true,
-  lastModified: true
-}));
 
-async function fetchRSS() {
-  console.log("⏳ RSS güncelleniyor...");
 
+app.get("/", async (req, res) => {
   const results = [];
 
   for (const feed of feeds) {
@@ -58,7 +44,7 @@ async function fetchRSS() {
       const data = await parser.parseURL(feed.url);
       if (!data || !data.items) continue;
 
-      const items = data.items.slice(0, 10).map((item) => {
+      const items = data.items.slice(0, 30).map((item) => {
         let image =
           item.image ||
           item.enclosure?.url ||
@@ -80,50 +66,45 @@ async function fetchRSS() {
         };
       });
 
-      results.push({
-        name: feed.name,
-        logo: feed.logo || null,
-        items,
-      });
-
+      results.push({ name: feed.name, items });
     } catch (err) {
-      console.warn("⚠️ RSS çekilemedi:", feed.name, err.message);
+      console.warn(`RSS alınamadı: ${feed.name}`, err.message);
     }
   }
 
-  // JSON dosyasına güvenli yazma
-  fs.writeFileSync(RESULTS_FILE, JSON.stringify(results, null, 2), "utf8");
-
-  console.log("✅ RSS başarıyla güncellendi:", new Date().toLocaleTimeString());
-}
-
-// 📌 Cron — her 10 dakikada bir RSS güncelle
-cron.schedule("*/20 * * * *", async () => {
-  try {
-    await fetchRSS();
-  } catch (err) {
-    console.error("❌ FetchRSS Hatası:", err.message);
-  }
+  res.render("news", { title: "RSS Haberler", feeds: results, publicVapidKey });
 });
 
-app.get("/", (req, res) => {
-  let results = [];
+app.get("/index", (req, res) => {
+  res.render("index")
+})
 
-  try {
-    const raw = fs.readFileSync(RESULTS_FILE, "utf8").trim();
-    results = raw ? JSON.parse(raw) : [];
-  } catch (err) {
-    console.error("❌ results.json okunamadı:", err);
-    results = [];
-  }
+/*
+// Push abonelik endpointi
+app.post("/subscribe", (req, res) => {
+  const subscription = req.body;
+  console.log("Yeni abonelik:", subscription);
+  res.status(201).json({});
+});
+*/
 
-  res.render("news2", {
-    title: "RSS Haberler",
-    feeds: results,
-    publicVapidKey,
+// 10 saniye gecikmeli test push
+app.post("/send-test", async (req, res) => {
+  const subscription = req.body;
+  const payload = JSON.stringify({
+    title: "Test Bildirimi",
+    body: "10 saniye sonra gelen bildirim!"
   });
+
+  try {
+    await webpush.sendNotification(subscription, payload);
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Bildirim gönderilemedi" });
+  }
 });
 
-app.listen(2500, () => {
-  console.log("🚀 Sunucu hazır: http://localhost:4000");
+app.listen(4000, () => {
+  console.log("🚀 Sunucu http://localhost:4000 adresinde çalışıyor");
 });

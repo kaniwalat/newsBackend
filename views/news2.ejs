@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Site açıklaması" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="Uygulama Adı" />
+    <meta name="msapplication-navbutton-color" content="#000000" />
+    <meta name="msapplication-TileColor" content="#000000" />
+    <meta name="msapplication-TileImage" content="/icons/128.png" />
+
+    <title><!= title !></title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/180.png" />
+    <link rel="icon" type="image/jpeg" sizes="192x192" href="/icons/192.jpg" />
+    <link rel="icon" type="image/jpeg" sizes="512x512" href="/icons/512.jpg" />
+    <link rel="icon" type="image/jpeg" sizes="32x32" href="/icons/32.jpg" />
+    <link rel="icon" type="image/jpeg" sizes="16x16" href="/icons/16.jpg" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="stylesheet" href="/style.css" />
+    <style>
+      /* Overlay (arka plan karartması) */
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 80%;
+        background: rgba(0, 0, 0, 0.4);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease;
+        z-index: 998;
+      }
+      .overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+      /* Sidebar / panel */
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0; /* sol tarafa hizala */
+        transform: translateX(-100%); /* tamamen gizle */
+        width: 100px;
+        height: 100%;
+        background: #fff;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease;
+        z-index: 999;
+        padding: 20px;
+        overflow-y: auto;
+      }
+
+      /* Açıldığında */
+      .sidebar.active {
+        transform: translateX(0); /* ekranın içine kaydır */
+      }
+      /* Kapat butonu */
+      .close-btn {
+        cursor: pointer;
+        font-size: 24px;
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-weight: bold;
+      }
+
+      /* Açma butonu */
+      .open-btn {
+        margin: 20px;
+        padding: 10px 20px;
+        background: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      /* Liste stili */
+      .sidebar ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 40px;
+      }
+      .sidebar li {
+        padding: 12px 8px;
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .sidebar li:hover {
+        background: #f0f0f0;
+      }
+
+      /* Responsive */
+      @media (max-width: 600px) {
+        .sidebar {
+          width: 50%; /* mobilde daha geniş */
+        }
+      }
+    </style>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6176707718052075"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+
+  <body>
+    <div id="splash-screen">
+      <img src="/icons/192.jpg" alt="Logo" class="splash-logo" />
+    </div>
+    <button class="open-btn" id="openBtn">Listeyi Aç</button>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <span class="close-btn" id="closeBtn">&times;</span>
+      <h2>Menü</h2>
+      <ul class="tabs" id="feedTabs">
+        <% feeds.forEach((feed, index) => { %>
+        <% if (feed.logo) { %>
+        <img src="<%= feed.logo %>" alt="<%= feed.name %> Logosu" width="30" height="30" />
+        <% } %>
+        <li>
+          <button class="tab-btn <%= index === 0 ? 'active' : '' %>" data-tab="feed-<%= index %>">
+            <%= feed.name %>
+          </button>
+        </li>
+        <% }) %>
+      </ul>
+    </div>
+
+    <div id="app-content" class="hidden">
+      <header class="navbar">
+        <div class="container">
+          <a href="#" class="brand">📰 RSS Haberler</a>
+        </div>
+      </header>
+
+      <main class="container">
+        <div id="ad-container" style="margin: 20px auto; text-align: center">
+          <ins
+            class="adsbygoogle"
+            style="display: block"
+            data-ad-client="ca-pub-6176707718052075"
+            data-ad-slot="1234567890"
+            data-ad-format="auto"
+            data-adtest="on"
+          ></ins>
+
+          <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+          </script>
+        </div>
+
+        <div class="tab-content">
+          <% feeds.forEach((feed, index) => { %>
+          <div class="tab-pane <%= index === 0 ? 'active' : '' %>" id="feed-<%= index %>">
+            <% if (feed.items && feed.items.length > 0) { %> <% feed.items.forEach(item => { %>
+            <div class="card">
+              <% if (item.image) { %>
+              <img src="<%= item.image %>" class="card-img" />
+              <% } %>
+              <div class="card-body">
+                <h3 class="card-title">
+                  <a href="<%= item.link %>" target="_blank"><%= item.title %></a>
+                </h3>
+                <p class="card-text"><%= item.contentSnippet %></p>
+                <small class="card-date"><%= item.pubDate || '' %></small>
+              </div>
+            </div>
+            <% }) %>
+            <% } else { %>
+            <p class="muted">Bu kaynakta haber bulunamadı.</p>
+            <% } %>
+          </div>
+          <% }) %>
+        </div>
+      </main>
+      <footer>
+        <p>© 2025 Tüm Hakları Saklıdır</p>
+      </footer>
+    </div>
+    <script>
+      const publicVapidKey = '<%= publicVapidKey %>';
+      console.log('VAPID key:', publicVapidKey);
+    </script>
+    <script src="/js/script.js"></script>
+    <script src="/js/splash.js"></script>
+    <script src="/js/drawer.js"></script>
+  </body>
+</html>
